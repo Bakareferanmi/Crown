@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { signOut } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
-import { auth } from "../lib/firebaseClient";
+import { collection, getDocs, doc, updateDoc, query, orderBy } from "firebase/firestore";
+import { auth, db } from "../lib/firebaseClient";
 import callApi from "../lib/api";
 
 export default function AdminDashboard() {
@@ -14,8 +15,8 @@ export default function AdminDashboard() {
 
   const loadStaff = async () => {
     try {
-      const data = await callApi("staff-list", "GET");
-      setStaffList(data.staff);
+      const snap = await getDocs(collection(db, "staff"));
+      setStaffList(snap.docs.map((d) => ({ uid: d.id, ...d.data() })).filter((s) => s.role === "staff"));
     } catch (err) {
       setError(err.message);
     }
@@ -23,8 +24,9 @@ export default function AdminDashboard() {
 
   const loadAttendance = async () => {
     try {
-      const data = await callApi("attendance", "GET");
-      setAttendance(data.records);
+      const q = query(collection(db, "attendance"), orderBy("date", "desc"));
+      const snap = await getDocs(q);
+      setAttendance(snap.docs.map((d) => ({ id: d.id, ...d.data() })));
     } catch (err) {
       setError(err.message);
     }
@@ -62,7 +64,7 @@ export default function AdminDashboard() {
   const handleDeactivate = async (uid) => {
     if (!confirm("Deactivate this staff member?")) return;
     try {
-      await callApi("staff-update", "POST", { uid, active: false });
+      await updateDoc(doc(db, "staff", uid), { active: false });
       await loadStaff();
     } catch (err) {
       setError(err.message);
@@ -178,8 +180,8 @@ export default function AdminDashboard() {
             <tr key={r.id}>
               <td>{staffName(r.staff_id)}</td>
               <td>{r.date}</td>
-              <td>{r.clock_in?._seconds ? new Date(r.clock_in._seconds * 1000).toLocaleTimeString() : "-"}</td>
-              <td>{r.clock_out?._seconds ? new Date(r.clock_out._seconds * 1000).toLocaleTimeString() : "-"}</td>
+              <td>{r.clock_in?.seconds ? new Date(r.clock_in.seconds * 1000).toLocaleTimeString() : "-"}</td>
+              <td>{r.clock_out?.seconds ? new Date(r.clock_out.seconds * 1000).toLocaleTimeString() : "-"}</td>
             </tr>
           ))}
         </tbody>
