@@ -6,6 +6,7 @@ import callApi from "../lib/api";
 
 export default function AdminDashboard() {
   const [staffList, setStaffList] = useState([]);
+  const [attendance, setAttendance] = useState([]);
   const [form, setForm] = useState({ name: "", email: "", password: "", department: "" });
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
@@ -20,8 +21,18 @@ export default function AdminDashboard() {
     }
   };
 
+  const loadAttendance = async () => {
+    try {
+      const data = await callApi("attendance", "GET");
+      setAttendance(data.records);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   useEffect(() => {
     loadStaff();
+    loadAttendance();
   }, []);
 
   const handleChange = (e) => {
@@ -48,13 +59,35 @@ export default function AdminDashboard() {
     setLoading(false);
   };
 
+  const handleDeactivate = async (uid) => {
+    if (!confirm("Deactivate this staff member?")) return;
+    try {
+      await callApi("staff-update", "POST", { uid, active: false });
+      await loadStaff();
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  const handleDelete = async (uid) => {
+    if (!confirm("Permanently delete this staff member? This cannot be undone.")) return;
+    try {
+      await callApi("staff-delete", "POST", { uid });
+      await loadStaff();
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
   const handleLogout = async () => {
     await signOut(auth);
     navigate("/");
   };
 
+  const staffName = (uid) => staffList.find((s) => s.uid === uid)?.name || uid;
+
   return (
-    <div style={{ maxWidth: 600, margin: "40px auto", padding: 20 }}>
+    <div style={{ maxWidth: 700, margin: "40px auto", padding: 20 }}>
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <h2>Admin Dashboard</h2>
         <button onClick={handleLogout}>Log Out</button>
@@ -102,12 +135,14 @@ export default function AdminDashboard() {
       </form>
 
       <h3>Staff List</h3>
-      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+      <table style={{ width: "100%", borderCollapse: "collapse", marginBottom: 30 }}>
         <thead>
           <tr>
             <th style={{ textAlign: "left", borderBottom: "1px solid #ccc" }}>Name</th>
             <th style={{ textAlign: "left", borderBottom: "1px solid #ccc" }}>Email</th>
-            <th style={{ textAlign: "left", borderBottom: "1px solid #ccc" }}>Department</th>
+            <th style={{ textAlign: "left", borderBottom: "1px solid #ccc" }}>Dept</th>
+            <th style={{ textAlign: "left", borderBottom: "1px solid #ccc" }}>Status</th>
+            <th style={{ borderBottom: "1px solid #ccc" }}></th>
           </tr>
         </thead>
         <tbody>
@@ -116,6 +151,35 @@ export default function AdminDashboard() {
               <td>{s.name}</td>
               <td>{s.email}</td>
               <td>{s.department}</td>
+              <td>{s.active === false ? "Inactive" : "Active"}</td>
+              <td>
+                <button onClick={() => handleDeactivate(s.uid)} style={{ marginRight: 5 }}>
+                  Deactivate
+                </button>
+                <button onClick={() => handleDelete(s.uid)}>Delete</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      <h3>Attendance History</h3>
+      <table style={{ width: "100%", borderCollapse: "collapse" }}>
+        <thead>
+          <tr>
+            <th style={{ textAlign: "left", borderBottom: "1px solid #ccc" }}>Staff</th>
+            <th style={{ textAlign: "left", borderBottom: "1px solid #ccc" }}>Date</th>
+            <th style={{ textAlign: "left", borderBottom: "1px solid #ccc" }}>Clock In</th>
+            <th style={{ textAlign: "left", borderBottom: "1px solid #ccc" }}>Clock Out</th>
+          </tr>
+        </thead>
+        <tbody>
+          {attendance.map((r) => (
+            <tr key={r.id}>
+              <td>{staffName(r.staff_id)}</td>
+              <td>{r.date}</td>
+              <td>{r.clock_in?._seconds ? new Date(r.clock_in._seconds * 1000).toLocaleTimeString() : "-"}</td>
+              <td>{r.clock_out?._seconds ? new Date(r.clock_out._seconds * 1000).toLocaleTimeString() : "-"}</td>
             </tr>
           ))}
         </tbody>
