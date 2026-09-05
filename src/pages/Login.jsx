@@ -26,7 +26,7 @@ export default function Login() {
     }
   };
 
-  const timeStr = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  const timeStr = now.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", hour12: true });
   const dateStr = now.toLocaleDateString([], { weekday: "long", month: "long", day: "numeric" });
 
   return (
@@ -82,8 +82,8 @@ const styles = {
   page: { display: "flex", minHeight: "100vh", fontFamily: "Inter, system-ui, sans-serif", flexWrap: "wrap" },
   brandPanel: { flex: "1 1 320px", background: "#1A1D29", color: "#F7F7F5", padding: "48px 40px", display: "flex", flexDirection: "column", justifyContent: "space-between", minHeight: "260px" },
   wordmark: { fontSize: "22px", fontWeight: 600, letterSpacing: "-0.02em", margin: 0 },
-  clockBlock: { margin: "40px 0" },
-  clockTime: { fontSize: "56px", fontWeight: 600, color: "#E8A33D", margin: 0, letterSpacing: "-0.02em" },
+  clockBlock: { margin: "20px 0" },
+  clockTime: { fontSize: "34px", fontWeight: 600, color: "#E8A33D", margin: 0, letterSpacing: "-0.01em" },
   clockDate: { fontSize: "15px", color: "#9AA0B0", margin: "8px 0 0" },
   tagline: { fontSize: "14px", color: "#6B7280", margin: 0 },
   formPanel: { flex: "1 1 360px", background: "#F7F7F5", display: "flex", alignItems: "center", justifyContent: "center", padding: "40px 24px" },

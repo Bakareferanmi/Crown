@@ -39,7 +39,7 @@ export default function AdminDashboard() {
       </div>
 
       <div style={styles.grid}>
-        <div style={styles.card}>
+        <div style={{ ...styles.card, flex: "1 1 280px", margin: 0 }}>
           <h2 style={styles.cardTitle}>Add staff</h2>
           <form onSubmit={handleCreate}>
             <input name="name" placeholder="Full name" value={form.name} onChange={handleChange} required style={styles.input} />
@@ -51,7 +51,7 @@ export default function AdminDashboard() {
           </form>
         </div>
 
-        <div style={styles.card}>
+        <div style={{ ...styles.card, flex: "2 1 320px", margin: 0 }}>
           <h2 style={styles.cardTitle}>Staff ({staffList.length})</h2>
           {staffList.length === 0 && <p style={styles.emptyText}>No staff added yet.</p>}
           {staffList.map((s) => (
@@ -103,22 +103,22 @@ export default function AdminDashboard() {
 }
 
 const styles = {
-  page: { minHeight: "100vh", background: "#F7F7F5", fontFamily: "Inter, system-ui, sans-serif", padding: "32px 24px" },
-  header: { display: "flex", justifyContent: "space-between", alignItems: "flex-start", maxWidth: "960px", margin: "0 auto 24px" },
+  page: { minHeight: "100vh", background: "#F7F7F5", fontFamily: "Inter, system-ui, sans-serif", padding: "24px 16px" },
+  header: { display: "flex", flexWrap: "wrap", gap: "12px", justifyContent: "space-between", alignItems: "flex-start", maxWidth: "960px", margin: "0 auto 24px" },
   wordmark: { fontSize: "20px", fontWeight: 600, color: "#1A1D29", margin: 0 },
   subwordmark: { fontSize: "13px", color: "#6B7280", margin: "2px 0 0" },
   logoutButton: { fontSize: "13px", color: "#6B7280", background: "none", border: "1px solid #D8D8D3", borderRadius: "8px", padding: "8px 14px", cursor: "pointer" },
-  grid: { display: "grid", gridTemplateColumns: "minmax(0, 1fr) minmax(0, 1.4fr)", gap: "20px", maxWidth: "960px", margin: "0 auto 20px" },
+  grid: { display: "flex", flexWrap: "wrap", gap: "20px", maxWidth: "960px", margin: "0 auto 20px" },
   card: { background: "#fff", border: "1px solid #E5E5E1", borderRadius: "12px", padding: "24px", maxWidth: "960px", margin: "0 auto 20px" },
   cardTitle: { fontSize: "16px", fontWeight: 600, color: "#1A1D29", margin: "0 0 16px" },
   input: { display: "block", width: "100%", padding: "10px 12px", marginBottom: "12px", fontSize: "14px", border: "1px solid #D8D8D3", borderRadius: "8px", boxSizing: "border-box" },
   primaryButton: { width: "100%", padding: "11px", fontSize: "14px", fontWeight: 600, color: "#1A1D29", background: "#E8A33D", border: "none", borderRadius: "8px", cursor: "pointer" },
   error: { fontSize: "13px", color: "#C0392B", margin: "-4px 0 12px" },
   emptyText: { fontSize: "13px", color: "#9AA0B0" },
-  staffRow: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 0", borderBottom: "1px solid #F0F0EC" },
+  staffRow: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "12px 0", borderBottom: "1px solid #F0F0EC", gap: "10px", flexWrap: "wrap" },
   staffName: { fontSize: "14px", fontWeight: 500, color: "#1A1D29", margin: 0 },
   staffMeta: { fontSize: "12px", color: "#6B7280", margin: "2px 0 0" },
-  staffActions: { display: "flex", alignItems: "center", gap: "8px" },
+  staffActions: { display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" },
   statusBadge: { fontSize: "11px", fontWeight: 600, padding: "3px 8px", borderRadius: "6px" },
   statusActive: { background: "#E1F5EE", color: "#0F6E56" },
   statusInactive: { background: "#F1EFE8", color: "#5F5E5A" },

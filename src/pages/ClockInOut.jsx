@@ -38,7 +38,7 @@ export default function ClockInOut() {
     navigate("/");
   };
 
-  const timeStr = now.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+  const timeStr = now.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", second: "2-digit", hour12: true });
   const dateStr = now.toLocaleDateString([], { weekday: "long", month: "long", day: "numeric" });
 
   return (
@@ -65,7 +65,7 @@ const styles = {
   card: { width: "100%", maxWidth: "360px", background: "#1A1D29", borderRadius: "16px", padding: "40px 32px", textAlign: "center", color: "#F7F7F5" },
   wordmark: { fontSize: "16px", fontWeight: 600, color: "#9AA0B0", margin: "0 0 4px" },
   greeting: { fontSize: "15px", color: "#F7F7F5", margin: "0 0 20px" },
-  time: { fontSize: "48px", fontWeight: 600, color: "#E8A33D", margin: 0, letterSpacing: "-0.02em" },
+  time: { fontSize: "30px", fontWeight: 600, color: "#E8A33D", margin: 0, letterSpacing: "-0.01em" },
   date: { fontSize: "14px", color: "#9AA0B0", margin: "8px 0 32px" },
   primaryButton: { width: "100%", padding: "14px", fontSize: "15px", fontWeight: 600, color: "#1A1D29", background: "#E8A33D", border: "none", borderRadius: "8px", cursor: "pointer", marginBottom: "10px" },
   secondaryButton: { width: "100%", padding: "14px", fontSize: "15px", fontWeight: 600, color: "#F7F7F5", background: "transparent", border: "1px solid #3A3E4D", borderRadius: "8px", cursor: "pointer", marginBottom: "20px" },
