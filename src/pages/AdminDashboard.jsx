@@ -279,8 +279,8 @@ const styles = {
   presentDot: { width: "6px", height: "6px", borderRadius: "50%", background: "#0F766E" },
   settingsRow: { display: "flex", alignItems: "center", gap: "14px", marginBottom: "20px" },
   settingsDetail: { display: "flex", alignItems: "center", gap: "10px", fontSize: "14px", color: "#374151", padding: "10px 0", borderTop: "1px solid #F3F4F6" },
-  bottomNav: { position: "sticky", bottom: 0, background: "#fff", borderTop: "1px solid #E5E7EB", display: "flex", justifyContent: "space-around", padding: "8px 0 calc(6px + env(safe-area-inset-bottom))", maxWidth: "1040px", width: "100%", margin: "0 auto" },
-  navItem: { display: "flex", flexDirection: "column", alignItems: "center", gap: "3px", background: "none", border: "none", cursor: "pointer", position: "relative", padding: "4px 10px" },
-  navLabel: { fontSize: "11px", fontWeight: 600 },
+  bottomNav: { position: "sticky", bottom: 0, background: "#fff", borderTop: "1px solid #E5E7EB", display: "flex", justifyContent: "space-between", padding: "8px 8px calc(6px + env(safe-area-inset-bottom))", maxWidth: "1040px", width: "100%", margin: "0 auto", boxSizing: "border-box" },
+  navItem: { flex: "1 1 0", minWidth: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: "3px", background: "none", border: "none", cursor: "pointer", position: "relative", padding: "4px 2px" },
+  navLabel: { fontSize: "10.5px", fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: "100%" },
   navUnderline: { position: "absolute", bottom: "-6px", width: "20px", height: "2px", background: "#2F6FED", borderRadius: "2px" },
 };
