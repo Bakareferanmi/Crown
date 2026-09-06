@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { HiOutlineClock, HiOutlineBell, HiOutlineArrowRight } from "react-icons/hi2";
+import { HiOutlineUserGroup, HiOutlineUserAdd, HiOutlineClipboardCheck, HiOutlineStar } from "react-icons/hi";
 import { useDemo } from "../context/DemoContext";
 
 export default function AdminDashboard() {
@@ -36,16 +38,16 @@ export default function AdminDashboard() {
         <div style={styles.header}>
           <div style={styles.brandRow}>
             <div style={styles.logoBox}>
-              <Icon name="clock" size={20} color="#fff" />
+              <HiOutlineClock size={20} color="#fff" />
             </div>
-            <div>
+            <div style={{ minWidth: 0 }}>
               <p style={styles.brandName}>Crown</p>
               <p style={styles.brandSub}>Admin dashboard</p>
             </div>
           </div>
           <div style={styles.headerRight}>
-            <button style={styles.iconButton}>
-              <Icon name="bell" size={18} color="#6B7280" />
+            <button style={styles.iconButton} aria-label="Notifications">
+              <HiOutlineBell size={18} color="#374151" />
               <span style={styles.notifDot} />
             </button>
             <div style={styles.avatarSmall}>{initials}</div>
@@ -57,10 +59,10 @@ export default function AdminDashboard() {
         <p style={styles.subGreeting}>Here's your team overview for today.</p>
 
         <div style={styles.statsGrid}>
-          <StatCard icon="users" iconBg="#E6F0FE" iconColor="#2F6FED" label="Total staff" value={staffList.length} unit="Members" />
-          <StatCard icon="userCheck" iconBg="#E1F5EE" iconColor="#0F6E56" label="Active" value={activeCount} unit="Staff" />
-          <StatCard icon="calendarCheck" iconBg="#F1E9FE" iconColor="#7F56D9" label="Records logged" value={attendance.length} unit="Total" />
-          <StatCard icon="star" iconBg="#FEF3E2" iconColor="#E8A33D" label="Departments" value={new Set(staffList.map((s) => s.department)).size} unit="Active" />
+          <StatCard icon={<HiOutlineUserGroup size={18} color="#1D4ED8" />} iconBg="#DCE9FE" label="Total staff" value={staffList.length} unit="Members" />
+          <StatCard icon={<HiOutlineClipboardCheck size={18} color="#0F766E" />} iconBg="#D4F1EA" label="Active" value={activeCount} unit="Staff" />
+          <StatCard icon={<HiOutlineUserAdd size={18} color="#6D28D9" />} iconBg="#E9DFFC" label="Records logged" value={attendance.length} unit="Total" />
+          <StatCard icon={<HiOutlineStar size={18} color="#B45309" />} iconBg="#FCEBD1" label="Departments" value={new Set(staffList.map((s) => s.department)).size} unit="Active" />
         </div>
 
         <div style={styles.grid}>
@@ -83,7 +85,7 @@ export default function AdminDashboard() {
               <div key={s.uid} style={styles.staffRow}>
                 <div style={styles.staffLeft}>
                   <div style={styles.miniAvatar}>{s.name.split(" ").map((n) => n[0]).join("").slice(0, 2)}</div>
-                  <div>
+                  <div style={{ minWidth: 0 }}>
                     <p style={styles.staffName}>{s.name}</p>
                     <p style={styles.staffMeta}>{s.email} · {s.department}</p>
                   </div>
@@ -104,7 +106,7 @@ export default function AdminDashboard() {
           <div style={styles.tableHeader}>
             <h2 style={styles.cardTitle}>Attendance history</h2>
             <button style={styles.viewAllButton}>
-              View all <Icon name="arrowRight" size={14} color="#2F6FED" />
+              View all <HiOutlineArrowRight size={14} color="#1D4ED8" />
             </button>
           </div>
           {attendance.length === 0 && <p style={styles.emptyText}>No attendance recorded yet.</p>}
@@ -144,12 +146,10 @@ export default function AdminDashboard() {
   );
 }
 
-function StatCard({ icon, iconBg, iconColor, label, value, unit }) {
+function StatCard({ icon, iconBg, label, value, unit }) {
   return (
     <div style={styles.statCard}>
-      <div style={{ ...styles.statIconBox, background: iconBg }}>
-        <Icon name={icon} size={18} color={iconColor} />
-      </div>
+      <div style={{ ...styles.statIconBox, background: iconBg }}>{icon}</div>
       <p style={styles.statLabel}>{label}</p>
       <p style={styles.statValue}>{value}</p>
       <p style={styles.statUnit}>{unit}</p>
@@ -157,73 +157,51 @@ function StatCard({ icon, iconBg, iconColor, label, value, unit }) {
   );
 }
 
-function Icon({ name, size = 20, color = "#000" }) {
-  const props = { width: size, height: size, viewBox: "0 0 24 24", fill: "none", stroke: color, strokeWidth: 2, strokeLinecap: "round", strokeLinejoin: "round" };
-  switch (name) {
-    case "clock":
-      return <svg {...props}><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 3" /></svg>;
-    case "bell":
-      return <svg {...props}><path d="M18 8a6 6 0 10-12 0c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.7 21a2 2 0 01-3.4 0" /></svg>;
-    case "users":
-      return <svg {...props}><circle cx="9" cy="8" r="3" /><path d="M2 21v-1a5 5 0 015-5h4a5 5 0 015 5v1" /><circle cx="18" cy="9" r="2.5" /><path d="M16.5 21v-1a4 4 0 013-3.87" /></svg>;
-    case "userCheck":
-      return <svg {...props}><circle cx="9" cy="8" r="3" /><path d="M2 21v-1a5 5 0 015-5h4a5 5 0 015 5v1" /><path d="M17 11l2 2 4-4" /></svg>;
-    case "calendarCheck":
-      return <svg {...props}><rect x="3" y="5" width="18" height="16" rx="2" /><path d="M16 3v4M8 3v4M3 10h18M9 15l2 2 4-4" /></svg>;
-    case "star":
-      return <svg {...props} fill={color} stroke="none"><path d="M12 2l3 6.5 7 1-5 5 1.5 7-6.5-3.5-6.5 3.5 1.5-7-5-5 7-1z" /></svg>;
-    case "arrowRight":
-      return <svg {...props}><path d="M5 12h14M13 6l6 6-6 6" /></svg>;
-    default:
-      return null;
-  }
-}
-
 const styles = {
-  page: { minHeight: "100vh", background: "#F0F3FA", fontFamily: "'Inter', system-ui, sans-serif" },
-  container: { maxWidth: "1040px", margin: "0 auto", padding: "24px 20px 60px" },
-  header: { display: "flex", flexWrap: "wrap", gap: "12px", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" },
-  brandRow: { display: "flex", alignItems: "center", gap: "12px" },
-  logoBox: { width: "40px", height: "40px", borderRadius: "12px", background: "#2F6FED", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 },
-  brandName: { fontSize: "16px", fontWeight: 700, color: "#111827", margin: 0 },
-  brandSub: { fontSize: "12px", color: "#9AA0B0", margin: "1px 0 0" },
-  headerRight: { display: "flex", alignItems: "center", gap: "10px" },
+  page: { minHeight: "100vh", background: "#EEF2FA", fontFamily: "'Inter', system-ui, sans-serif" },
+  container: { maxWidth: "1040px", margin: "0 auto", padding: "20px 16px 60px", boxSizing: "border-box" },
+  header: { display: "flex", flexWrap: "wrap", gap: "12px", justifyContent: "space-between", alignItems: "center", marginBottom: "22px" },
+  brandRow: { display: "flex", alignItems: "center", gap: "10px", minWidth: 0 },
+  logoBox: { width: "38px", height: "38px", borderRadius: "11px", background: "#2F6FED", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 },
+  brandName: { fontSize: "15px", fontWeight: 700, color: "#111827", margin: 0 },
+  brandSub: { fontSize: "11px", color: "#6B7280", margin: "1px 0 0" },
+  headerRight: { display: "flex", alignItems: "center", gap: "8px", flexShrink: 0 },
   iconButton: { position: "relative", width: "36px", height: "36px", borderRadius: "50%", background: "#fff", border: "1px solid #E5E7EB", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" },
   notifDot: { position: "absolute", top: "8px", right: "8px", width: "6px", height: "6px", borderRadius: "50%", background: "#EF4444" },
-  avatarSmall: { width: "36px", height: "36px", borderRadius: "50%", background: "#1A1D29", color: "#fff", fontSize: "12px", fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center" },
-  logoutButton: { fontSize: "13px", color: "#6B7280", background: "#fff", border: "1px solid #E5E7EB", borderRadius: "10px", padding: "8px 16px", cursor: "pointer" },
-  greeting: { fontSize: "22px", fontWeight: 700, color: "#111827", margin: "0 0 4px" },
-  subGreeting: { fontSize: "13px", color: "#6B7280", margin: "0 0 20px" },
-  statsGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "14px", marginBottom: "20px" },
-  statCard: { background: "#fff", borderRadius: "16px", padding: "16px", border: "1px solid #EDEFF3" },
-  statIconBox: { width: "36px", height: "36px", borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "10px" },
-  statLabel: { fontSize: "12px", color: "#9AA0B0", margin: "0 0 2px" },
-  statValue: { fontSize: "22px", fontWeight: 700, color: "#111827", margin: 0 },
-  statUnit: { fontSize: "12px", color: "#9AA0B0", margin: "2px 0 0" },
-  grid: { display: "flex", flexWrap: "wrap", gap: "16px", marginBottom: "16px" },
-  card: { background: "#fff", border: "1px solid #EDEFF3", borderRadius: "16px", padding: "22px", marginBottom: "16px" },
-  cardTitle: { fontSize: "15px", fontWeight: 700, color: "#111827", margin: "0 0 16px" },
-  tableHeader: { display: "flex", justifyContent: "space-between", alignItems: "center" },
-  viewAllButton: { display: "flex", alignItems: "center", gap: "4px", fontSize: "13px", color: "#2F6FED", background: "none", border: "none", cursor: "pointer", fontWeight: 500 },
-  input: { display: "block", width: "100%", padding: "11px 14px", marginBottom: "12px", fontSize: "14px", border: "1.5px solid #E5E7EB", borderRadius: "10px", background: "#FAFAFA", boxSizing: "border-box", outline: "none" },
-  primaryButton: { width: "100%", padding: "12px", fontSize: "14px", fontWeight: 600, color: "#fff", background: "#2F6FED", border: "none", borderRadius: "10px", cursor: "pointer" },
-  error: { fontSize: "13px", color: "#B91C1C", background: "#FEECEC", borderRadius: "8px", padding: "8px 12px", margin: "-2px 0 12px" },
-  emptyText: { fontSize: "13px", color: "#9AA0B0" },
-  staffRow: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 0", borderBottom: "1px solid #F3F3EF", gap: "10px", flexWrap: "wrap" },
-  staffLeft: { display: "flex", alignItems: "center", gap: "12px" },
-  miniAvatar: { width: "36px", height: "36px", borderRadius: "50%", background: "#1A1D29", color: "#fff", fontSize: "12px", fontWeight: 600, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 },
-  staffName: { fontSize: "14px", fontWeight: 500, color: "#111827", margin: 0 },
-  staffMeta: { fontSize: "12px", color: "#9AA0B0", margin: "2px 0 0" },
-  staffActions: { display: "flex", alignItems: "center", gap: "8px", flexWrap: "wrap" },
-  statusBadge: { fontSize: "11px", fontWeight: 600, padding: "4px 10px", borderRadius: "20px" },
-  statusActive: { background: "#E1F5EE", color: "#0F6E56" },
-  statusInactive: { background: "#F1EFE8", color: "#5F5E5A" },
-  smallButton: { fontSize: "12px", padding: "6px 12px", border: "1px solid #E5E7EB", borderRadius: "8px", background: "#fff", cursor: "pointer" },
-  smallButtonDanger: { fontSize: "12px", padding: "6px 12px", border: "1px solid #F0999B", borderRadius: "8px", background: "#fff", color: "#B91C1C", cursor: "pointer" },
-  tableScroll: { overflowX: "auto" },
-  table: { width: "100%", borderCollapse: "collapse", minWidth: "500px" },
-  th: { textAlign: "left", fontSize: "12px", color: "#9AA0B0", fontWeight: 500, padding: "8px 8px 8px 0", borderBottom: "1px solid #EFEFEA" },
-  td: { fontSize: "13px", color: "#374151", padding: "12px 8px 12px 0", borderBottom: "1px solid #F3F3EF" },
-  presentBadge: { display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "12px", color: "#0F6E56", background: "#E1F5EE", padding: "3px 10px", borderRadius: "20px", fontWeight: 500 },
-  presentDot: { width: "6px", height: "6px", borderRadius: "50%", background: "#0F6E56" },
+  avatarSmall: { width: "36px", height: "36px", borderRadius: "50%", background: "#1F2937", color: "#fff", fontSize: "12px", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" },
+  logoutButton: { fontSize: "13px", color: "#374151", background: "#fff", border: "1px solid #E5E7EB", borderRadius: "10px", padding: "8px 14px", cursor: "pointer" },
+  greeting: { fontSize: "20px", fontWeight: 700, color: "#111827", margin: "0 0 4px" },
+  subGreeting: { fontSize: "13px", color: "#4B5563", margin: "0 0 18px" },
+  statsGrid: { display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px, 1fr))", gap: "12px", marginBottom: "18px" },
+  statCard: { background: "#fff", borderRadius: "16px", padding: "14px", border: "1px solid #E5E7EB", minWidth: 0 },
+  statIconBox: { width: "34px", height: "34px", borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: "10px" },
+  statLabel: { fontSize: "12px", color: "#6B7280", margin: "0 0 2px" },
+  statValue: { fontSize: "20px", fontWeight: 700, color: "#111827", margin: 0 },
+  statUnit: { fontSize: "12px", color: "#6B7280", margin: "2px 0 0" },
+  grid: { display: "flex", flexWrap: "wrap", gap: "14px", marginBottom: "14px" },
+  card: { background: "#fff", border: "1px solid #E5E7EB", borderRadius: "16px", padding: "18px", marginBottom: "14px", minWidth: 0 },
+  cardTitle: { fontSize: "15px", fontWeight: 700, color: "#111827", margin: "0 0 14px" },
+  tableHeader: { display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "8px" },
+  viewAllButton: { display: "flex", alignItems: "center", gap: "4px", fontSize: "13px", color: "#1D4ED8", background: "none", border: "none", cursor: "pointer", fontWeight: 600 },
+  input: { display: "block", width: "100%", padding: "11px 14px", marginBottom: "12px", fontSize: "15px", border: "1.5px solid #D1D5DB", borderRadius: "10px", background: "#fff", boxSizing: "border-box", outline: "none" },
+  primaryButton: { width: "100%", padding: "12px", fontSize: "14px", fontWeight: 700, color: "#fff", background: "#2F6FED", border: "none", borderRadius: "10px", cursor: "pointer" },
+  error: { fontSize: "13px", color: "#991B1B", background: "#FEE2E2", borderRadius: "8px", padding: "8px 12px", margin: "-2px 0 12px" },
+  emptyText: { fontSize: "13px", color: "#6B7280" },
+  staffRow: { display: "flex", justifyContent: "space-between", alignItems: "center", padding: "13px 0", borderBottom: "1px solid #F3F4F6", gap: "10px", flexWrap: "wrap" },
+  staffLeft: { display: "flex", alignItems: "center", gap: "12px", minWidth: 0 },
+  miniAvatar: { width: "34px", height: "34px", borderRadius: "50%", background: "#1F2937", color: "#fff", fontSize: "12px", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 },
+  staffName: { fontSize: "14px", fontWeight: 600, color: "#111827", margin: 0 },
+  staffMeta: { fontSize: "12px", color: "#6B7280", margin: "2px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" },
+  staffActions: { display: "flex", alignItems: "center", gap: "6px", flexWrap: "wrap" },
+  statusBadge: { fontSize: "11px", fontWeight: 700, padding: "4px 10px", borderRadius: "20px" },
+  statusActive: { background: "#D4F1EA", color: "#0F766E" },
+  statusInactive: { background: "#F3F4F6", color: "#4B5563" },
+  smallButton: { fontSize: "12px", padding: "6px 11px", border: "1px solid #D1D5DB", borderRadius: "8px", background: "#fff", color: "#374151", cursor: "pointer" },
+  smallButtonDanger: { fontSize: "12px", padding: "6px 11px", border: "1px solid #FCA5A5", borderRadius: "8px", background: "#fff", color: "#991B1B", cursor: "pointer" },
+  tableScroll: { overflowX: "auto", WebkitOverflowScrolling: "touch" },
+  table: { width: "100%", borderCollapse: "collapse", minWidth: "480px" },
+  th: { textAlign: "left", fontSize: "12px", color: "#6B7280", fontWeight: 600, padding: "8px 8px 8px 0", borderBottom: "1px solid #E5E7EB" },
+  td: { fontSize: "13px", color: "#1F2937", padding: "12px 8px 12px 0", borderBottom: "1px solid #F3F4F6" },
+  presentBadge: { display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "12px", color: "#0F766E", background: "#D4F1EA", padding: "3px 10px", borderRadius: "20px", fontWeight: 600 },
+  presentDot: { width: "6px", height: "6px", borderRadius: "50%", background: "#0F766E" },
 };

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { HiOutlineClock } from "react-icons/hi2";
 import { useDemo } from "../context/DemoContext";
 
 export default function Login() {
@@ -31,8 +32,8 @@ export default function Login() {
 
   const inputStyle = (field) => ({
     ...styles.input,
-    borderColor: focusedField === field ? "#2F6FED" : "#E5E7EB",
-    boxShadow: focusedField === field ? "0 0 0 3px rgba(47,111,237,0.12)" : "none",
+    borderColor: focusedField === field ? "#2F6FED" : "#D1D5DB",
+    boxShadow: focusedField === field ? "0 0 0 3px rgba(47,111,237,0.15)" : "none",
   });
 
   return (
@@ -40,7 +41,7 @@ export default function Login() {
       <div style={styles.card}>
         <div style={styles.brandRow}>
           <div style={styles.logoBox}>
-            <ClockIcon size={20} color="#fff" />
+            <HiOutlineClock size={22} color="#fff" />
           </div>
           <div>
             <p style={styles.brandName}>Crown</p>
@@ -91,44 +92,37 @@ export default function Login() {
   );
 }
 
-function ClockIcon({ size = 20, color = "#fff" }) {
-  return (
-    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="9" />
-      <path d="M12 7v5l3 3" />
-    </svg>
-  );
-}
-
 const styles = {
   page: {
     minHeight: "100vh",
-    background: "#F0F3FA",
+    background: "#EEF2FA",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     fontFamily: "'Inter', system-ui, sans-serif",
-    padding: "24px",
+    padding: "20px",
+    boxSizing: "border-box",
   },
   card: {
     width: "100%",
     maxWidth: "400px",
     background: "#fff",
     borderRadius: "20px",
-    padding: "32px 28px",
-    border: "1px solid #EDEFF3",
-    boxShadow: "0 1px 2px rgba(20,20,20,0.03), 0 12px 32px rgba(20,20,20,0.06)",
+    padding: "28px 24px",
+    border: "1px solid #E5E7EB",
+    boxShadow: "0 1px 2px rgba(17,24,39,0.04), 0 12px 32px rgba(17,24,39,0.08)",
+    boxSizing: "border-box",
   },
-  brandRow: { display: "flex", alignItems: "center", gap: "12px", marginBottom: "28px" },
+  brandRow: { display: "flex", alignItems: "center", gap: "12px", marginBottom: "26px" },
   logoBox: { width: "44px", height: "44px", borderRadius: "13px", background: "#2F6FED", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 },
   brandName: { fontSize: "17px", fontWeight: 700, color: "#111827", margin: 0 },
-  brandSub: { fontSize: "12px", color: "#9AA0B0", margin: "1px 0 0" },
+  brandSub: { fontSize: "12px", color: "#6B7280", margin: "1px 0 0" },
   heading: { fontSize: "22px", fontWeight: 700, color: "#111827", margin: "0 0 6px" },
-  subheading: { fontSize: "13px", color: "#6B7280", margin: "0 0 14px" },
-  demoHint: { fontSize: "12px", color: "#6B7280", background: "#F0F3FA", borderRadius: "10px", padding: "10px 12px", marginBottom: "22px" },
-  label: { display: "block", fontSize: "13px", fontWeight: 500, color: "#111827", marginBottom: "6px" },
-  input: { display: "block", width: "100%", padding: "11px 14px", marginBottom: "16px", fontSize: "15px", border: "1.5px solid #E5E7EB", borderRadius: "10px", background: "#FAFAFA", color: "#111827", boxSizing: "border-box", outline: "none", transition: "border-color 0.15s ease, box-shadow 0.15s ease" },
-  error: { fontSize: "13px", color: "#B91C1C", background: "#FEECEC", borderRadius: "8px", padding: "8px 12px", margin: "-4px 0 16px" },
-  button: { width: "100%", padding: "13px", fontSize: "15px", fontWeight: 600, color: "#fff", background: "#2F6FED", border: "none", borderRadius: "10px", cursor: "pointer" },
-  footerTime: { fontSize: "12px", color: "#9AA0B0", textAlign: "center", margin: "20px 0 0" },
+  subheading: { fontSize: "13px", color: "#4B5563", margin: "0 0 14px" },
+  demoHint: { fontSize: "12px", color: "#374151", background: "#F3F4F6", borderRadius: "10px", padding: "10px 12px", marginBottom: "22px" },
+  label: { display: "block", fontSize: "13px", fontWeight: 600, color: "#111827", marginBottom: "6px" },
+  input: { display: "block", width: "100%", padding: "12px 14px", marginBottom: "16px", fontSize: "16px", border: "1.5px solid #D1D5DB", borderRadius: "10px", background: "#fff", color: "#111827", boxSizing: "border-box", outline: "none", transition: "border-color 0.15s ease, box-shadow 0.15s ease" },
+  error: { fontSize: "13px", color: "#991B1B", background: "#FEE2E2", borderRadius: "8px", padding: "8px 12px", margin: "-4px 0 16px" },
+  button: { width: "100%", padding: "13px", fontSize: "15px", fontWeight: 700, color: "#fff", background: "#2F6FED", border: "none", borderRadius: "10px", cursor: "pointer" },
+  footerTime: { fontSize: "12px", color: "#6B7280", textAlign: "center", margin: "20px 0 0" },
 };
