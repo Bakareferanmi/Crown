@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { HiOutlineClock, HiOutlineBell, HiOutlineCalendar, HiOutlineArrowRight, HiOutlineMail, HiOutlineLogout as HiOutlineSignOut } from "react-icons/hi2";
-import { HiOutlineCalendar as HiCalendarCheck, HiOutlineUserGroup, HiOutlineClock as HiClockHistory, HiOutlineStar, HiOutlineLogin, HiOutlineLogout, HiOutlineHome, HiOutlineClipboardList, HiOutlineCog, HiOutlineOfficeBuilding } from "react-icons/hi";
+import { HiOutlineClock, HiOutlineBell, HiOutlineCalendar, HiOutlineArrowRight } from "react-icons/hi2";
+import { HiOutlineCalendar as HiCalendarCheck, HiOutlineUserGroup, HiOutlineClock as HiClockHistory, HiOutlineStar, HiOutlineLogin, HiOutlineLogout, HiOutlineLogout as HiOutlineSignOut, HiOutlineHome, HiOutlineClipboardList, HiOutlineCog, HiOutlineOfficeBuilding, HiOutlineMail } from "react-icons/hi";
 
 import { useDemo } from "../context/DemoContext";
 
