@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { HiOutlineClock, HiOutlineBell, HiOutlineArrowRight } from "react-icons/hi2";
-import { HiOutlineUserGroup, HiOutlineUserAdd, HiOutlineClipboardCheck, HiOutlineStar } from "react-icons/hi";
+import { HiOutlineUserGroup, HiOutlineUserAdd, HiOutlineClipboardCheck, HiOutlineOfficeBuilding, HiOutlineHome, HiOutlineClock as HiClockHistory, HiOutlineClipboardList, HiOutlineCog } from "react-icons/hi";
 import { useDemo } from "../context/DemoContext";
 
 export default function AdminDashboard() {
@@ -62,7 +62,7 @@ export default function AdminDashboard() {
           <StatCard icon={<HiOutlineUserGroup size={18} color="#1D4ED8" />} iconBg="#DCE9FE" label="Total staff" value={staffList.length} unit="Members" />
           <StatCard icon={<HiOutlineClipboardCheck size={18} color="#0F766E" />} iconBg="#D4F1EA" label="Active" value={activeCount} unit="Staff" />
           <StatCard icon={<HiOutlineUserAdd size={18} color="#6D28D9" />} iconBg="#E9DFFC" label="Records logged" value={attendance.length} unit="Total" />
-          <StatCard icon={<HiOutlineStar size={18} color="#B45309" />} iconBg="#FCEBD1" label="Departments" value={new Set(staffList.map((s) => s.department)).size} unit="Active" />
+          <StatCard icon={<HiOutlineOfficeBuilding size={18} color="#B45309" />} iconBg="#FCEBD1" label="Departments" value={new Set(staffList.map((s) => s.department)).size} unit="Active" />
         </div>
 
         <div style={styles.grid}>
@@ -142,7 +142,24 @@ export default function AdminDashboard() {
           )}
         </div>
       </div>
+
+      <nav style={styles.bottomNav}>
+        <NavItem icon={<HiOutlineHome size={20} />} label="Home" active onClick={() => {}} />
+        <NavItem icon={<HiClockHistory size={20} />} label="Attendance" onClick={() => {}} />
+        <NavItem icon={<HiOutlineClipboardList size={20} />} label="History" onClick={() => {}} />
+        <NavItem icon={<HiOutlineCog size={20} />} label="Settings" onClick={handleLogout} />
+      </nav>
     </div>
+  );
+}
+
+function NavItem({ icon, label, active, onClick }) {
+  return (
+    <button onClick={onClick} style={styles.navItem}>
+      <span style={{ color: active ? "#2F6FED" : "#6B7280" }}>{icon}</span>
+      <span style={{ ...styles.navLabel, color: active ? "#2F6FED" : "#6B7280" }}>{label}</span>
+      {active && <span style={styles.navUnderline} />}
+    </button>
   );
 }
 
@@ -159,7 +176,7 @@ function StatCard({ icon, iconBg, label, value, unit }) {
 
 const styles = {
   page: { minHeight: "100vh", background: "#EEF2FA", fontFamily: "'Inter', system-ui, sans-serif" },
-  container: { maxWidth: "1040px", margin: "0 auto", padding: "20px 16px 60px", boxSizing: "border-box" },
+  container: { maxWidth: "1040px", margin: "0 auto", padding: "20px 16px 96px", boxSizing: "border-box" },
   header: { display: "flex", flexWrap: "wrap", gap: "12px", justifyContent: "space-between", alignItems: "center", marginBottom: "22px" },
   brandRow: { display: "flex", alignItems: "center", gap: "10px", minWidth: 0 },
   logoBox: { width: "38px", height: "38px", borderRadius: "11px", background: "#2F6FED", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 },
@@ -204,4 +221,8 @@ const styles = {
   td: { fontSize: "13px", color: "#1F2937", padding: "12px 8px 12px 0", borderBottom: "1px solid #F3F4F6" },
   presentBadge: { display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "12px", color: "#0F766E", background: "#D4F1EA", padding: "3px 10px", borderRadius: "20px", fontWeight: 600 },
   presentDot: { width: "6px", height: "6px", borderRadius: "50%", background: "#0F766E" },
+  bottomNav: { position: "sticky", bottom: 0, background: "#fff", borderTop: "1px solid #E5E7EB", display: "flex", justifyContent: "space-around", padding: "8px 0 calc(6px + env(safe-area-inset-bottom))", maxWidth: "1040px", width: "100%", margin: "0 auto" },
+  navItem: { display: "flex", flexDirection: "column", alignItems: "center", gap: "3px", background: "none", border: "none", cursor: "pointer", position: "relative", padding: "4px 10px" },
+  navLabel: { fontSize: "11px", fontWeight: 600 },
+  navUnderline: { position: "absolute", bottom: "-6px", width: "20px", height: "2px", background: "#2F6FED", borderRadius: "2px" },
 };
