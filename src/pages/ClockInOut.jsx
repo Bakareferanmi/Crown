@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { HiOutlineClock, HiOutlineBell, HiOutlineCalendar, HiOutlineArrowRight } from "react-icons/hi2";
-import { HiOutlineCalendar as HiCalendarCheck, HiOutlineUserGroup, HiOutlineClock as HiClockHistory, HiOutlineStar, HiOutlineLogin, HiOutlineLogout, HiOutlineHome, HiOutlineClipboardList, HiOutlineCog } from "react-icons/hi";
+import { HiOutlineClock, HiOutlineBell, HiOutlineCalendar, HiOutlineArrowRight, HiOutlineMail, HiOutlineLogout as HiOutlineSignOut } from "react-icons/hi2";
+import { HiOutlineCalendar as HiCalendarCheck, HiOutlineUserGroup, HiOutlineClock as HiClockHistory, HiOutlineStar, HiOutlineLogin, HiOutlineLogout, HiOutlineHome, HiOutlineClipboardList, HiOutlineCog, HiOutlineOfficeBuilding } from "react-icons/hi";
 
 import { useDemo } from "../context/DemoContext";
 
 export default function ClockInOut() {
   const [now, setNow] = useState(new Date());
+  const [activeTab, setActiveTab] = useState("home");
   const { currentUser, attendance, clockIn, clockOut, logout } = useDemo();
   const navigate = useNavigate();
 
@@ -45,6 +46,38 @@ export default function ClockInOut() {
   const totalDays = myRecords.length;
   const presentThisMonth = myRecords.filter((r) => r.date.startsWith(todayStr().slice(0, 7))).length;
 
+  const AttendanceTable = ({ rows }) => (
+    <div style={styles.tableScroll}>
+      <table style={styles.table}>
+        <thead>
+          <tr>
+            <th style={styles.th}>Date</th>
+            <th style={styles.th}>Clock In</th>
+            <th style={styles.th}>Clock Out</th>
+            <th style={styles.th}>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {rows.length === 0 && (
+            <tr><td colSpan={4} style={styles.emptyCell}>No attendance recorded yet.</td></tr>
+          )}
+          {rows.slice().reverse().map((r) => (
+            <tr key={r.id}>
+              <td style={styles.td}>{r.date}</td>
+              <td style={styles.td}>{r.clock_in || "-"}</td>
+              <td style={styles.td}>{r.clock_out || "-"}</td>
+              <td style={styles.td}>
+                <span style={styles.presentBadge}>
+                  <span style={styles.presentDot} /> {r.clock_out ? "Complete" : "Present"}
+                </span>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+
   return (
     <div style={styles.page}>
       <div style={styles.container}>
@@ -67,90 +100,140 @@ export default function ClockInOut() {
           </div>
         </div>
 
-        <h1 style={styles.greeting}>Good morning, {firstName} <span>👋</span></h1>
-        <p style={styles.subGreeting}>Here's your attendance overview for today.</p>
-        <div style={styles.dateRow}>
-          <HiOutlineCalendar size={15} color="#4B5563" />
-          <span>{dateStr}</span>
-        </div>
-
-        <div style={styles.clockCard}>
-          <div style={styles.clockCardLeft}>
-            <div style={styles.statusRow}>
-              <span style={{ ...styles.statusDot, background: isClockedIn ? "#4ADE80" : "#FCA5A5" }} />
-              <span style={styles.statusText}>{isClockedIn ? "You're currently clocked in" : "You're not clocked in yet"}</span>
+        {activeTab === "home" && (
+          <>
+            <h1 style={styles.greeting}>Good morning, {firstName} <span>👋</span></h1>
+            <p style={styles.subGreeting}>Here's your attendance overview for today.</p>
+            <div style={styles.dateRow}>
+              <HiOutlineCalendar size={15} color="#4B5563" />
+              <span>{dateStr}</span>
             </div>
-            <p style={styles.currentTimeLabel}>Current Time</p>
-            <p style={styles.currentTime}>{timeStr}</p>
-            <p style={styles.currentDate}>{dateStr}</p>
 
-            <button onClick={handleToggleClock} style={styles.clockButton}>
-              {isClockedIn ? <HiOutlineLogout size={17} color="#2F6FED" /> : <HiOutlineLogin size={17} color="#2F6FED" />}
-              {isClockedIn ? "Clock Out" : "Clock In"}
-            </button>
-          </div>
+            <div style={styles.clockCard}>
+              <div style={styles.clockCardLeft}>
+                <div style={styles.statusRow}>
+                  <span style={{ ...styles.statusDot, background: isClockedIn ? "#4ADE80" : "#FCA5A5" }} />
+                  <span style={styles.statusText}>{isClockedIn ? "You're currently clocked in" : "You're not clocked in yet"}</span>
+                </div>
+                <p style={styles.currentTimeLabel}>Current Time</p>
+                <p style={styles.currentTime}>{timeStr}</p>
+                <p style={styles.currentDate}>{dateStr}</p>
 
-          <div style={styles.clockCardRight}>
-            <div style={styles.clockRingOuter}>
-              <div style={styles.clockRingInner}>
-                <HiOutlineClock size={26} color="#2F6FED" />
+                <button onClick={handleToggleClock} style={styles.clockButton}>
+                  {isClockedIn ? <HiOutlineLogout size={17} color="#2F6FED" /> : <HiOutlineLogin size={17} color="#2F6FED" />}
+                  {isClockedIn ? "Clock Out" : "Clock In"}
+                </button>
+              </div>
+
+              <div style={styles.clockCardRight}>
+                <div style={styles.clockRingOuter}>
+                  <div style={styles.clockRingInner}>
+                    <HiOutlineClock size={26} color="#2F6FED" />
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <div style={styles.statsGrid}>
-          <StatCard icon={<HiCalendarCheck size={18} color="#1D4ED8" />} iconBg="#DCE9FE" label="Attendance" value={totalDays} unit="Days" />
-          <StatCard icon={<HiOutlineUserGroup size={18} color="#0F766E" />} iconBg="#D4F1EA" label="This Month" value={presentThisMonth} unit="Present" />
-          <StatCard icon={<HiClockHistory size={18} color="#6D28D9" />} iconBg="#E9DFFC" label="On Time" value="94%" unit="Rate" />
-          <StatCard icon={<HiOutlineStar size={18} color="#B45309" />} iconBg="#FCEBD1" label="Longest Streak" value="12" unit="Days" />
-        </div>
+            <div style={styles.statsGrid}>
+              <StatCard icon={<HiCalendarCheck size={18} color="#1D4ED8" />} iconBg="#DCE9FE" label="Attendance" value={totalDays} unit="Days" />
+              <StatCard icon={<HiOutlineUserGroup size={18} color="#0F766E" />} iconBg="#D4F1EA" label="This Month" value={presentThisMonth} unit="Present" />
+              <StatCard icon={<HiClockHistory size={18} color="#6D28D9" />} iconBg="#E9DFFC" label="On Time" value="94%" unit="Rate" />
+              <StatCard icon={<HiOutlineStar size={18} color="#B45309" />} iconBg="#FCEBD1" label="Longest Streak" value="12" unit="Days" />
+            </div>
 
-        <div style={styles.tableCard}>
-          <div style={styles.tableHeader}>
-            <h2 style={styles.tableTitle}>Recent Attendance</h2>
-            <button style={styles.viewAllButton}>
-              View All <HiOutlineArrowRight size={14} color="#2F6FED" />
-            </button>
-          </div>
+            <div style={styles.tableCard}>
+              <div style={styles.tableHeader}>
+                <h2 style={styles.tableTitle}>Recent Attendance</h2>
+                <button style={styles.viewAllButton} onClick={() => setActiveTab("history")}>
+                  View All <HiOutlineArrowRight size={14} color="#2F6FED" />
+                </button>
+              </div>
+              <AttendanceTable rows={myRecords.slice(-5)} />
+            </div>
+          </>
+        )}
 
-          <div style={styles.tableScroll}>
-            <table style={styles.table}>
-              <thead>
-                <tr>
-                  <th style={styles.th}>Date</th>
-                  <th style={styles.th}>Clock In</th>
-                  <th style={styles.th}>Clock Out</th>
-                  <th style={styles.th}>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                {myRecords.length === 0 && (
-                  <tr><td colSpan={4} style={styles.emptyCell}>No attendance recorded yet.</td></tr>
-                )}
-                {myRecords.slice().reverse().map((r) => (
-                  <tr key={r.id}>
-                    <td style={styles.td}>{r.date}</td>
-                    <td style={styles.td}>{r.clock_in || "-"}</td>
-                    <td style={styles.td}>{r.clock_out || "-"}</td>
-                    <td style={styles.td}>
-                      <span style={styles.presentBadge}>
-                        <span style={styles.presentDot} /> Present
-                      </span>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+        {activeTab === "attendance" && (
+          <>
+            <h1 style={styles.greeting}>My attendance</h1>
+            <p style={styles.subGreeting}>Clock in or out and track today's status.</p>
+
+            <div style={styles.clockCard}>
+              <div style={styles.clockCardLeft}>
+                <div style={styles.statusRow}>
+                  <span style={{ ...styles.statusDot, background: isClockedIn ? "#4ADE80" : "#FCA5A5" }} />
+                  <span style={styles.statusText}>{isClockedIn ? "You're currently clocked in" : "You're not clocked in yet"}</span>
+                </div>
+                <p style={styles.currentTimeLabel}>Current Time</p>
+                <p style={styles.currentTime}>{timeStr}</p>
+                <p style={styles.currentDate}>{dateStr}</p>
+
+                <button onClick={handleToggleClock} style={styles.clockButton}>
+                  {isClockedIn ? <HiOutlineLogout size={17} color="#2F6FED" /> : <HiOutlineLogin size={17} color="#2F6FED" />}
+                  {isClockedIn ? "Clock Out" : "Clock In"}
+                </button>
+              </div>
+              <div style={styles.clockCardRight}>
+                <div style={styles.clockRingOuter}>
+                  <div style={styles.clockRingInner}>
+                    <HiOutlineClock size={26} color="#2F6FED" />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style={styles.tableCard}>
+              <h2 style={styles.tableTitle}>This month</h2>
+              <AttendanceTable rows={myRecords} />
+            </div>
+          </>
+        )}
+
+        {activeTab === "history" && (
+          <>
+            <h1 style={styles.greeting}>Attendance history</h1>
+            <p style={styles.subGreeting}>Your full clock-in and clock-out log.</p>
+
+            <div style={styles.tableCard}>
+              <AttendanceTable rows={myRecords} />
+            </div>
+          </>
+        )}
+
+        {activeTab === "settings" && (
+          <>
+            <h1 style={styles.greeting}>Settings</h1>
+            <p style={styles.subGreeting}>Your account details.</p>
+
+            <div style={styles.tableCard}>
+              <div style={styles.settingsRow}>
+                <div style={styles.avatarLarge}>{initials}</div>
+                <div>
+                  <p style={styles.staffNameLg}>{currentUser?.name}</p>
+                  <p style={styles.staffMetaLg}>Staff</p>
+                </div>
+              </div>
+              <div style={styles.settingsDetail}>
+                <HiOutlineMail size={16} color="#6B7280" />
+                <span>{currentUser?.email}</span>
+              </div>
+              <div style={styles.settingsDetail}>
+                <HiOutlineOfficeBuilding size={16} color="#6B7280" />
+                <span>{currentUser?.department}</span>
+              </div>
+              <button onClick={handleLogout} style={styles.dangerButton}>
+                <HiOutlineSignOut size={16} /> Log out
+              </button>
+            </div>
+          </>
+        )}
       </div>
 
       <nav style={styles.bottomNav}>
-        <NavItem icon={<HiOutlineHome size={20} />} label="Home" active onClick={() => {}} />
-        <NavItem icon={<HiClockHistory size={20} />} label="Attendance" onClick={() => {}} />
-        <NavItem icon={<HiOutlineClipboardList size={20} />} label="History" onClick={() => {}} />
-        <NavItem icon={<HiOutlineCog size={20} />} label="Settings" onClick={handleLogout} />
+        <NavItem icon={<HiOutlineHome size={20} />} label="Home" active={activeTab === "home"} onClick={() => setActiveTab("home")} />
+        <NavItem icon={<HiClockHistory size={20} />} label="Attendance" active={activeTab === "attendance"} onClick={() => setActiveTab("attendance")} />
+        <NavItem icon={<HiOutlineClipboardList size={20} />} label="History" active={activeTab === "history"} onClick={() => setActiveTab("history")} />
+        <NavItem icon={<HiOutlineCog size={20} />} label="Settings" active={activeTab === "settings"} onClick={() => setActiveTab("settings")} />
       </nav>
     </div>
   );
@@ -189,6 +272,7 @@ const styles = {
   iconButton: { position: "relative", width: "36px", height: "36px", borderRadius: "50%", background: "#fff", border: "1px solid #E5E7EB", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" },
   notifDot: { position: "absolute", top: "8px", right: "8px", width: "6px", height: "6px", borderRadius: "50%", background: "#EF4444" },
   avatarSmall: { width: "36px", height: "36px", borderRadius: "50%", background: "#1F2937", color: "#fff", fontSize: "12px", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" },
+  avatarLarge: { width: "52px", height: "52px", borderRadius: "50%", background: "#1F2937", color: "#fff", fontSize: "16px", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 },
   greeting: { fontSize: "20px", fontWeight: 700, color: "#111827", margin: "0 0 4px", lineHeight: 1.3 },
   subGreeting: { fontSize: "13px", color: "#4B5563", margin: "0 0 10px" },
   dateRow: { display: "flex", alignItems: "center", gap: "6px", fontSize: "13px", color: "#4B5563", marginBottom: "18px" },
@@ -210,9 +294,9 @@ const styles = {
   statLabel: { fontSize: "12px", color: "#6B7280", margin: "0 0 2px" },
   statValue: { fontSize: "20px", fontWeight: 700, color: "#111827", margin: 0 },
   statUnit: { fontSize: "12px", color: "#6B7280", margin: "2px 0 0" },
-  tableCard: { background: "#fff", borderRadius: "16px", padding: "16px", border: "1px solid #E5E7EB" },
+  tableCard: { background: "#fff", borderRadius: "16px", padding: "16px", border: "1px solid #E5E7EB", marginBottom: "16px" },
   tableHeader: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px", flexWrap: "wrap", gap: "8px" },
-  tableTitle: { fontSize: "15px", fontWeight: 700, color: "#111827", margin: 0 },
+  tableTitle: { fontSize: "15px", fontWeight: 700, color: "#111827", margin: "0 0 12px" },
   viewAllButton: { display: "flex", alignItems: "center", gap: "4px", fontSize: "13px", color: "#1D4ED8", background: "none", border: "none", cursor: "pointer", fontWeight: 600 },
   tableScroll: { overflowX: "auto", WebkitOverflowScrolling: "touch" },
   table: { width: "100%", borderCollapse: "collapse", minWidth: "400px" },
@@ -221,6 +305,11 @@ const styles = {
   emptyCell: { fontSize: "13px", color: "#6B7280", padding: "16px 0", textAlign: "center" },
   presentBadge: { display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "12px", color: "#0F766E", background: "#D4F1EA", padding: "3px 10px", borderRadius: "20px", fontWeight: 600 },
   presentDot: { width: "6px", height: "6px", borderRadius: "50%", background: "#0F766E" },
+  staffNameLg: { fontSize: "16px", fontWeight: 700, color: "#111827", margin: 0 },
+  staffMetaLg: { fontSize: "12px", color: "#6B7280", margin: "2px 0 0" },
+  settingsRow: { display: "flex", alignItems: "center", gap: "14px", marginBottom: "20px" },
+  settingsDetail: { display: "flex", alignItems: "center", gap: "10px", fontSize: "14px", color: "#374151", padding: "10px 0", borderTop: "1px solid #F3F4F6" },
+  dangerButton: { display: "inline-flex", alignItems: "center", gap: "8px", padding: "11px 18px", fontSize: "14px", fontWeight: 700, color: "#991B1B", background: "#FEE2E2", border: "none", borderRadius: "10px", cursor: "pointer", marginTop: "8px" },
   bottomNav: { position: "sticky", bottom: 0, background: "#fff", borderTop: "1px solid #E5E7EB", display: "flex", justifyContent: "space-around", padding: "8px 0 calc(6px + env(safe-area-inset-bottom))", maxWidth: "480px", width: "100%", margin: "0 auto" },
   navItem: { display: "flex", flexDirection: "column", alignItems: "center", gap: "3px", background: "none", border: "none", cursor: "pointer", position: "relative", padding: "4px 10px" },
   navLabel: { fontSize: "11px", fontWeight: 600 },
