@@ -230,8 +230,8 @@ function StatCard({ icon, iconBg, label, value, unit }) {
 
 const styles = {
   page: { minHeight: "100vh", background: "#EEF2FA", fontFamily: "'Inter', system-ui, sans-serif" },
-  container: { maxWidth: "1040px", margin: "0 auto", padding: "20px 16px 96px", boxSizing: "border-box" },
-  header: { display: "flex", flexWrap: "wrap", gap: "12px", justifyContent: "space-between", alignItems: "center", marginBottom: "22px" },
+  container: { maxWidth: "1040px", margin: "0 auto", padding: "0 16px 96px", boxSizing: "border-box" },
+  header: { display: "flex", flexWrap: "wrap", gap: "12px", justifyContent: "space-between", alignItems: "center", marginBottom: "22px", position: "sticky", top: 0, zIndex: 10, background: "#EEF2FA", paddingTop: "calc(12px + env(safe-area-inset-top))", paddingBottom: "8px" },
   brandRow: { display: "flex", alignItems: "center", gap: "10px", minWidth: 0 },
   logoBox: { width: "38px", height: "38px", borderRadius: "11px", background: "#2F6FED", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 },
   brandName: { fontSize: "15px", fontWeight: 700, color: "#111827", margin: 0 },
