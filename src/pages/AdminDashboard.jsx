@@ -229,8 +229,8 @@ function StatCard({ icon, iconBg, label, value, unit }) {
 }
 
 const styles = {
-  page: { minHeight: "100vh", background: "#EEF2FA", fontFamily: "'Inter', system-ui, sans-serif" },
-  container: { maxWidth: "1040px", margin: "0 auto", padding: "0 16px 96px", boxSizing: "border-box" },
+  page: { minHeight: "100vh", background: "#EEF2FA", fontFamily: "'Inter', system-ui, sans-serif", display: "flex", flexDirection: "column" },
+  container: { flex: 1, maxWidth: "1040px", width: "100%", margin: "0 auto", padding: "0 16px 24px", boxSizing: "border-box" },
   header: { display: "flex", flexWrap: "wrap", gap: "12px", justifyContent: "space-between", alignItems: "center", marginBottom: "22px", position: "sticky", top: 0, zIndex: 10, background: "#EEF2FA", paddingTop: "calc(12px + env(safe-area-inset-top))", paddingBottom: "8px" },
   brandRow: { display: "flex", alignItems: "center", gap: "10px", minWidth: 0 },
   logoBox: { width: "38px", height: "38px", borderRadius: "11px", background: "#2F6FED", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 },
@@ -279,7 +279,7 @@ const styles = {
   presentDot: { width: "6px", height: "6px", borderRadius: "50%", background: "#0F766E" },
   settingsRow: { display: "flex", alignItems: "center", gap: "14px", marginBottom: "20px" },
   settingsDetail: { display: "flex", alignItems: "center", gap: "10px", fontSize: "14px", color: "#374151", padding: "10px 0", borderTop: "1px solid #F3F4F6" },
-  bottomNav: { position: "sticky", bottom: 0, background: "#fff", borderTop: "1px solid #E5E7EB", display: "flex", justifyContent: "space-between", padding: "8px 8px calc(6px + env(safe-area-inset-bottom))", maxWidth: "1040px", width: "100%", margin: "0 auto", boxSizing: "border-box" },
+  bottomNav: { background: "#fff", borderTop: "1px solid #E5E7EB", display: "flex", justifyContent: "space-between", padding: "8px 8px calc(6px + env(safe-area-inset-bottom))", boxSizing: "border-box" },
   navItem: { flex: "1 1 0", minWidth: 0, display: "flex", flexDirection: "column", alignItems: "center", gap: "3px", background: "none", border: "none", cursor: "pointer", position: "relative", padding: "4px 2px" },
   navLabel: { fontSize: "10.5px", fontWeight: 600, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", maxWidth: "100%" },
   navUnderline: { position: "absolute", bottom: "-6px", width: "20px", height: "2px", background: "#2F6FED", borderRadius: "2px" },
