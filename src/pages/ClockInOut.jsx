@@ -261,7 +261,7 @@ function NavItem({ icon, label, active, onClick }) {
 }
 
 const styles = {
-  page: { minHeight: "100vh", background: "#EEF2FA", fontFamily: "'Inter', system-ui, sans-serif", display: "flex", flexDirection: "column" },
+  page: { minHeight: "100vh", background: "#EEF2FA", fontFamily: "'Poppins', system-ui, sans-serif", display: "flex", flexDirection: "column" },
   container: { flex: 1, maxWidth: "480px", width: "100%", margin: "0 auto", padding: "16px 16px 96px", boxSizing: "border-box" },
   header: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "22px" },
   brandRow: { display: "flex", alignItems: "center", gap: "10px", minWidth: 0 },

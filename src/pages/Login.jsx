@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { HiOutlineClock } from "react-icons/hi2";
 import { useDemo } from "../context/DemoContext";
 
 export default function Login() {
@@ -41,7 +40,7 @@ export default function Login() {
       <div style={styles.card}>
         <div style={styles.brandRow}>
           <div style={styles.logoBox}>
-            <HiOutlineClock size={22} color="#fff" />
+            <ClockIcon size={22} color="#fff" />
           </div>
           <div>
             <p style={styles.brandName}>Crown</p>
@@ -92,6 +91,15 @@ export default function Login() {
   );
 }
 
+function ClockIcon({ size = 20, color = "#fff" }) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+      <circle cx="12" cy="12" r="9" />
+      <path d="M12 7v5l3 3" />
+    </svg>
+  );
+}
+
 const styles = {
   page: {
     minHeight: "100vh",
@@ -99,7 +107,7 @@ const styles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    fontFamily: "'Inter', system-ui, sans-serif",
+    fontFamily: "'Poppins', system-ui, sans-serif",
     padding: "20px",
     boxSizing: "border-box",
   },

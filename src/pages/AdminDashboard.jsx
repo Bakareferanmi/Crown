@@ -229,7 +229,7 @@ function StatCard({ icon, iconBg, label, value, unit }) {
 }
 
 const styles = {
-  page: { minHeight: "100vh", background: "#EEF2FA", fontFamily: "'Inter', system-ui, sans-serif", display: "flex", flexDirection: "column" },
+  page: { minHeight: "100dvh", background: "#EEF2FA", fontFamily: "'Poppins', system-ui, sans-serif", display: "flex", flexDirection: "column" },
   container: { flex: 1, maxWidth: "1040px", width: "100%", margin: "0 auto", padding: "0 16px 24px", boxSizing: "border-box" },
   header: { display: "flex", flexWrap: "wrap", gap: "12px", justifyContent: "space-between", alignItems: "center", marginBottom: "22px", position: "sticky", top: 0, zIndex: 10, background: "#EEF2FA", paddingTop: "calc(12px + env(safe-area-inset-top))", paddingBottom: "8px" },
   brandRow: { display: "flex", alignItems: "center", gap: "10px", minWidth: 0 },
