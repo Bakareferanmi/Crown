@@ -1,13 +1,21 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { HiOutlineClock, HiOutlineBell, HiOutlineCalendar, HiOutlineArrowRight } from "react-icons/hi2";
-import { HiOutlineCalendar as HiCalendarCheck, HiOutlineUserGroup, HiOutlineClock as HiClockHistory, HiOutlineStar, HiOutlineLogin, HiOutlineLogout, HiOutlineLogout as HiOutlineSignOut, HiOutlineHome, HiOutlineClipboardList, HiOutlineCog, HiOutlineOfficeBuilding, HiOutlineMail } from "react-icons/hi";
+import { HiOutlineCalendar as HiCalendarCheck, HiOutlineUserGroup, HiOutlineClock as HiClockHistory, HiOutlineStar, HiOutlineLogin, HiOutlineLogout, HiOutlineLogout as HiOutlineSignOut, HiOutlineHome, HiOutlineClipboardList, HiOutlineCog, HiOutlineOfficeBuilding, HiOutlineMail, HiOutlineUserCircle } from "react-icons/hi";
 
 import { useDemo } from "../context/DemoContext";
+
+const NOTIFICATIONS = [
+  { id: 1, text: "You clocked in at 08:55 AM", time: "5 min ago" },
+  { id: 2, text: "Reminder: don't forget to clock out today", time: "3 hours ago" },
+  { id: 3, text: "Your attendance streak is 12 days", time: "Yesterday" },
+];
 
 export default function ClockInOut() {
   const [now, setNow] = useState(new Date());
   const [activeTab, setActiveTab] = useState("home");
+  const [showNotif, setShowNotif] = useState(false);
+  const [showProfile, setShowProfile] = useState(false);
   const { currentUser, attendance, clockIn, clockOut, logout } = useDemo();
   const navigate = useNavigate();
 
@@ -36,6 +44,16 @@ export default function ClockInOut() {
   const handleLogout = () => {
     logout();
     navigate("/");
+  };
+
+  const toggleNotif = () => {
+    setShowNotif((v) => !v);
+    setShowProfile(false);
+  };
+
+  const toggleProfile = () => {
+    setShowProfile((v) => !v);
+    setShowNotif(false);
   };
 
   const timeStr = now.toLocaleTimeString("en-US", { hour: "2-digit", minute: "2-digit", hour12: true });
@@ -92,11 +110,44 @@ export default function ClockInOut() {
             </div>
           </div>
           <div style={styles.headerRight}>
-            <button style={styles.iconButton} aria-label="Notifications">
-              <HiOutlineBell size={19} color="#374151" />
-              <span style={styles.notifDot} />
-            </button>
-            <div style={styles.avatarSmall}>{initials}</div>
+            <div style={{ position: "relative" }}>
+              <button style={styles.iconButton} aria-label="Notifications" onClick={toggleNotif}>
+                <HiOutlineBell size={19} color="#374151" />
+                <span style={styles.notifDot} />
+              </button>
+              {showNotif && (
+                <div style={styles.dropdown}>
+                  <p style={styles.dropdownTitle}>Notifications</p>
+                  {NOTIFICATIONS.map((n) => (
+                    <div key={n.id} style={styles.notifItem}>
+                      <p style={styles.notifText}>{n.text}</p>
+                      <p style={styles.notifTime}>{n.time}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div style={{ position: "relative" }}>
+              <button style={styles.avatarSmall} onClick={toggleProfile} aria-label="Profile menu">{initials}</button>
+              {showProfile && (
+                <div style={{ ...styles.dropdown, right: 0, minWidth: "200px" }}>
+                  <div style={styles.profileHeader}>
+                    <div style={styles.avatarSmall}>{initials}</div>
+                    <div style={{ minWidth: 0 }}>
+                      <p style={styles.staffNameLg}>{currentUser?.name}</p>
+                      <p style={styles.staffMetaLg}>{currentUser?.email}</p>
+                    </div>
+                  </div>
+                  <button style={styles.dropdownItem} onClick={() => { setActiveTab("settings"); setShowProfile(false); }}>
+                    <HiOutlineUserCircle size={16} color="#374151" /> View profile
+                  </button>
+                  <button style={{ ...styles.dropdownItem, color: "#991B1B" }} onClick={handleLogout}>
+                    <HiOutlineSignOut size={16} color="#991B1B" /> Log out
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -263,7 +314,7 @@ function NavItem({ icon, label, active, onClick }) {
 const styles = {
   page: { minHeight: "100vh", background: "#EEF2FA", fontFamily: "'Poppins', system-ui, sans-serif", display: "flex", flexDirection: "column" },
   container: { flex: 1, maxWidth: "480px", width: "100%", margin: "0 auto", padding: "16px 16px 96px", boxSizing: "border-box" },
-  header: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "22px" },
+  header: { display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "22px", position: "relative", zIndex: 20 },
   brandRow: { display: "flex", alignItems: "center", gap: "10px", minWidth: 0 },
   logoBox: { width: "38px", height: "38px", borderRadius: "11px", background: "#2F6FED", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 },
   brandName: { fontSize: "15px", fontWeight: 700, color: "#111827", margin: 0 },
@@ -271,8 +322,15 @@ const styles = {
   headerRight: { display: "flex", alignItems: "center", gap: "10px", flexShrink: 0 },
   iconButton: { position: "relative", width: "36px", height: "36px", borderRadius: "50%", background: "#fff", border: "1px solid #E5E7EB", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer" },
   notifDot: { position: "absolute", top: "8px", right: "8px", width: "6px", height: "6px", borderRadius: "50%", background: "#EF4444" },
-  avatarSmall: { width: "36px", height: "36px", borderRadius: "50%", background: "#1F2937", color: "#fff", fontSize: "12px", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center" },
+  avatarSmall: { width: "36px", height: "36px", borderRadius: "50%", background: "#1F2937", color: "#fff", fontSize: "12px", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", border: "none", cursor: "pointer", flexShrink: 0 },
   avatarLarge: { width: "52px", height: "52px", borderRadius: "50%", background: "#1F2937", color: "#fff", fontSize: "16px", fontWeight: 700, display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 },
+  dropdown: { position: "absolute", top: "44px", right: "-8px", background: "#fff", border: "1px solid #E5E7EB", borderRadius: "14px", boxShadow: "0 12px 32px rgba(17,24,39,0.12)", padding: "10px", minWidth: "240px", maxWidth: "85vw", zIndex: 30 },
+  dropdownTitle: { fontSize: "13px", fontWeight: 700, color: "#111827", margin: "2px 8px 8px" },
+  notifItem: { padding: "8px", borderRadius: "8px" },
+  notifText: { fontSize: "12.5px", color: "#1F2937", margin: 0, lineHeight: 1.4 },
+  notifTime: { fontSize: "11px", color: "#9CA3AF", margin: "2px 0 0" },
+  profileHeader: { display: "flex", alignItems: "center", gap: "10px", padding: "6px 8px 10px", borderBottom: "1px solid #F3F4F6", marginBottom: "6px" },
+  dropdownItem: { display: "flex", alignItems: "center", gap: "8px", width: "100%", padding: "9px 8px", fontSize: "13px", fontWeight: 500, color: "#374151", background: "none", border: "none", borderRadius: "8px", cursor: "pointer", textAlign: "left" },
   greeting: { fontSize: "20px", fontWeight: 700, color: "#111827", margin: "0 0 4px", lineHeight: 1.3 },
   subGreeting: { fontSize: "13px", color: "#4B5563", margin: "0 0 10px" },
   dateRow: { display: "flex", alignItems: "center", gap: "6px", fontSize: "13px", color: "#4B5563", marginBottom: "18px" },
@@ -305,8 +363,8 @@ const styles = {
   emptyCell: { fontSize: "13px", color: "#6B7280", padding: "16px 0", textAlign: "center" },
   presentBadge: { display: "inline-flex", alignItems: "center", gap: "5px", fontSize: "12px", color: "#0F766E", background: "#D4F1EA", padding: "3px 10px", borderRadius: "20px", fontWeight: 600 },
   presentDot: { width: "6px", height: "6px", borderRadius: "50%", background: "#0F766E" },
-  staffNameLg: { fontSize: "16px", fontWeight: 700, color: "#111827", margin: 0 },
-  staffMetaLg: { fontSize: "12px", color: "#6B7280", margin: "2px 0 0" },
+  staffNameLg: { fontSize: "14px", fontWeight: 600, color: "#111827", margin: 0 },
+  staffMetaLg: { fontSize: "12px", color: "#6B7280", margin: "2px 0 0", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" },
   settingsRow: { display: "flex", alignItems: "center", gap: "14px", marginBottom: "20px" },
   settingsDetail: { display: "flex", alignItems: "center", gap: "10px", fontSize: "14px", color: "#374151", padding: "10px 0", borderTop: "1px solid #F3F4F6" },
   dangerButton: { display: "inline-flex", alignItems: "center", gap: "8px", padding: "11px 18px", fontSize: "14px", fontWeight: 700, color: "#991B1B", background: "#FEE2E2", border: "none", borderRadius: "10px", cursor: "pointer", marginTop: "8px" },
